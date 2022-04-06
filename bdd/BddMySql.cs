@@ -177,5 +177,8 @@ namespace Mediatek86.bdd
             Console.WriteLine(e.Message);
             Environment.Exit(1);
         }
+
+
+
     }
 }

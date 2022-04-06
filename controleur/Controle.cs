@@ -14,6 +14,9 @@ namespace Mediatek86.controleur
         private readonly List<Categorie> lesRayons;
         private readonly List<Categorie> lesPublics;
         private readonly List<Categorie> lesGenres;
+        private  List<Commande> lesCommandes;
+        private readonly List<Suivi> lesSuivis;
+
 
         /// <summary>
         /// Ouverture de la fenêtre
@@ -26,6 +29,8 @@ namespace Mediatek86.controleur
             lesGenres = Dao.GetAllGenres();
             lesRayons = Dao.GetAllRayons();
             lesPublics = Dao.GetAllPublics();
+            lesCommandes = Dao.GetAllCommandes();
+            lesSuivis = Dao.getAllSuivis();
             FrmMediatek frmMediatek = new FrmMediatek(this);
             frmMediatek.ShowDialog();
         }
@@ -75,6 +80,13 @@ namespace Mediatek86.controleur
             return lesRayons;
         }
 
+        public List<Commande> GetAllCommandes()
+        {
+            
+            return Dao.GetAllCommandes();
+        }
+
+
         /// <summary>
         /// getter sur les publics
         /// </summary>
@@ -103,6 +115,38 @@ namespace Mediatek86.controleur
             return Dao.CreerExemplaire(exemplaire);
         }
 
+        public bool CreerCommandeDocument(Commande commande)
+        {
+            return Dao.CreerCommmandeDocuemnt(commande);
+            this.lesCommandes = GetAllCommandes();
+        }
+
+        public string getLastIdCommande()
+        {
+            return Dao.getLastIdCommande();
+            
+        }
+
+        public List<Suivi> getAllSuivis()
+        {
+            return lesSuivis;
+            
+
+        }
+        public bool updateCommandeDocument(Commande commande)
+        {
+        
+            return Dao.updateCommandeDocument(commande);
+            this.lesCommandes = GetAllCommandes();
+        }
+        public bool deleteCmdLivre(Commande commande)
+        {
+            return Dao.deleteCmdLivre(commande);
+            this.lesCommandes = GetAllCommandes();
+           
+
+        }
+        
     }
 
 }
