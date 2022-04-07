@@ -423,9 +423,7 @@ namespace Mediatek86.modele
             try
             {
                 string req = "delete from CommandeDocument where id = @id; ";
-              
-               
-             
+
                 Dictionary<string, object> parameters = new Dictionary<string, object>
                 {
                     { "@id", commande.Id}
@@ -434,16 +432,7 @@ namespace Mediatek86.modele
                 BddMySql curs = BddMySql.GetInstance(connectionString);
                 curs.ReqUpdate(req, parameters);
                 curs.Close();
-                
 
-            }
-            catch
-            {
-                
-            }
-
-            try
-            {
 
                 string req2 = "delete from Commande where id = @id; ";
 
@@ -467,10 +456,131 @@ namespace Mediatek86.modele
 
         }
 
+        public static bool creerCmdRevue(Abonnement abonnement)
+        {
+            try
+            {
+                string req = "insert into commande values (@id,@dateCommande,@montant);";
+
+                Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    { "@id", abonnement.Id},
+                    { "@dateCommande", abonnement.DateCommande},
+                    { "@montant", abonnement.Montant},
+
+                };
+                BddMySql curs = BddMySql.GetInstance(connectionString);
+                curs.ReqUpdate(req, parameters);
+                curs.Close();
+                string req2 = "insert into abonnement values(@id, @dateFinAbonnement, @idRevue); ";
+                Dictionary<string, object> scParameters = new Dictionary<string, object>
+                {
+
+                    { "@id", abonnement.Id},
+                    { "@dateFinAbonnement", abonnement.DateFinAbonnement},
+                    { "@idRevue",abonnement.IdRevue}
+                };
+                BddMySql scCurs = BddMySql.GetInstance(connectionString);
+                scCurs.ReqUpdate(req2, scParameters);
+                scCurs.Close();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        public static bool deleteCmdRevue(Abonnement abonnement)
+        {
+            try
+            {
+                string req = "delete from Abonnement where id = @id; ";
+
+                Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    { "@id", abonnement.Id}
+
+                };
+                BddMySql curs = BddMySql.GetInstance(connectionString);
+                curs.ReqUpdate(req, parameters);
+                curs.Close();
+
+
+                string req2 = "delete from Commande where id = @id; ";
+
+                Dictionary<string, object> parameters2 = new Dictionary<string, object>
+                {
+                    { "@id", abonnement.Id}
+
+                };
+                BddMySql curs2 = BddMySql.GetInstance(connectionString);
+                curs2.ReqUpdate(req2, parameters2);
+                curs2.Close();
+                return true;
+
+            }
+            catch
+            {
+                return false;
+            }
 
 
 
+        }
 
 
+        public static bool updateCmdRevue(Abonnement abonnement)
+        {
+            try
+            {
+                string req = "update Abonnement set dateFinAbonnement = @dateFinAbonnement ";
+                req += "where id = @id;";
+
+                Dictionary<string, object> parameters = new Dictionary<string, object>
+                {
+                    { "@id", abonnement.Id},
+                    { "@dateFinAbonnement", abonnement.DateFinAbonnement }
+
+                };
+                BddMySql curs = BddMySql.GetInstance(connectionString);
+                curs.ReqUpdate(req, parameters);
+                curs.Close();
+                return true;
+
+
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static List<Abonnement> getAllAbonnements()
+        {
+            
+            List<Abonnement> lesAbonnements = new List<Abonnement>();
+            string req = "Select C.id, C.dateCommande, C.montant, A.dateFinAbonnement, A.idRevue ";
+            req += " from Abonnement A join Commande C on A.id = c.id";
+            req += " order by C.Id;";
+            BddMySql curs = BddMySql.GetInstance(connectionString);
+            curs.ReqSelect(req, null);
+
+            while (curs.Read())
+            {
+                string id = (string)curs.Field("id");
+                DateTime dateCommande = (DateTime)curs.Field("dateCommande");
+                double montant = (double)curs.Field("montant");
+                DateTime dateFinCommande = (DateTime)curs.Field("dateFinAbonnement");
+                string idRevue = (string)curs.Field("idRevue");
+                Abonnement abonnement = new Abonnement(id, dateCommande, montant, dateFinCommande, idRevue);
+                lesAbonnements.Add(abonnement);
+            }
+            curs.Close();
+
+            return lesAbonnements;
+        }
     }
 }
