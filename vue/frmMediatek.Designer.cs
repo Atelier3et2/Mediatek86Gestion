@@ -223,6 +223,10 @@ namespace Mediatek86.vue
             this.dgvCmdDvd = new System.Windows.Forms.DataGridView();
             this.tabCmdRevue = new System.Windows.Forms.TabPage();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.dateDebCmdRevue = new System.Windows.Forms.DateTimePicker();
+            this.label72 = new System.Windows.Forms.Label();
+            this.dateFinCmdRevue = new System.Windows.Forms.DateTimePicker();
+            this.label71 = new System.Windows.Forms.Label();
             this.btnSupprimerCmdRevue = new System.Windows.Forms.Button();
             this.btnAnnulerCmdRevue = new System.Windows.Forms.Button();
             this.btnRenouvellerCmdRevue = new System.Windows.Forms.Button();
@@ -239,10 +243,6 @@ namespace Mediatek86.vue
             this.label70 = new System.Windows.Forms.Label();
             this.txtNumRevue = new System.Windows.Forms.TextBox();
             this.dgvCmdRevues = new System.Windows.Forms.DataGridView();
-            this.label71 = new System.Windows.Forms.Label();
-            this.dateFinCmdRevue = new System.Windows.Forms.DateTimePicker();
-            this.label72 = new System.Windows.Forms.Label();
-            this.dateDebCmdRevue = new System.Windows.Forms.DateTimePicker();
             this.tabCmdLivres.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -552,6 +552,7 @@ namespace Mediatek86.vue
             this.dgvCommandeLivres.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvCommandeLivres.Size = new System.Drawing.Size(688, 180);
             this.dgvCommandeLivres.TabIndex = 4;
+            this.dgvCommandeLivres.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvCommandeLivres_ColumnHeaderMouseClick);
             this.dgvCommandeLivres.SelectionChanged += new System.EventHandler(this.dgvCommandeLivres_SelectionChanged);
             // 
             // tabReceptionRevue
@@ -2539,6 +2540,7 @@ namespace Mediatek86.vue
             this.dgvCmdDvd.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvCmdDvd.Size = new System.Drawing.Size(688, 180);
             this.dgvCmdDvd.TabIndex = 4;
+            this.dgvCmdDvd.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvCmdDvd_ColumnHeaderMouseClick);
             this.dgvCmdDvd.SelectionChanged += new System.EventHandler(this.dgvCmdDvd_SelectionChanged);
             // 
             // tabCmdRevue
@@ -2577,6 +2579,42 @@ namespace Mediatek86.vue
             this.groupBox5.TabIndex = 19;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Informations détaillées";
+            // 
+            // dateDebCmdRevue
+            // 
+            this.dateDebCmdRevue.Location = new System.Drawing.Point(631, 58);
+            this.dateDebCmdRevue.Name = "dateDebCmdRevue";
+            this.dateDebCmdRevue.Size = new System.Drawing.Size(223, 22);
+            this.dateDebCmdRevue.TabIndex = 39;
+            // 
+            // label72
+            // 
+            this.label72.AutoSize = true;
+            this.label72.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label72.Location = new System.Drawing.Point(465, 131);
+            this.label72.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label72.Name = "label72";
+            this.label72.Size = new System.Drawing.Size(103, 17);
+            this.label72.TabIndex = 38;
+            this.label72.Text = "Date de fin : ";
+            // 
+            // dateFinCmdRevue
+            // 
+            this.dateFinCmdRevue.Location = new System.Drawing.Point(631, 127);
+            this.dateFinCmdRevue.Name = "dateFinCmdRevue";
+            this.dateFinCmdRevue.Size = new System.Drawing.Size(223, 22);
+            this.dateFinCmdRevue.TabIndex = 37;
+            // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label71.Location = new System.Drawing.Point(465, 62);
+            this.label71.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(126, 17);
+            this.label71.TabIndex = 36;
+            this.label71.Text = "Date de debut : ";
             // 
             // btnSupprimerCmdRevue
             // 
@@ -2769,43 +2807,8 @@ namespace Mediatek86.vue
             this.dgvCmdRevues.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvCmdRevues.Size = new System.Drawing.Size(688, 180);
             this.dgvCmdRevues.TabIndex = 4;
+            this.dgvCmdRevues.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvCmdRevues_ColumnHeaderMouseClick);
             this.dgvCmdRevues.SelectionChanged += new System.EventHandler(this.dgvCmdRevues_SelectionChanged);
-            // 
-            // label71
-            // 
-            this.label71.AutoSize = true;
-            this.label71.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label71.Location = new System.Drawing.Point(465, 62);
-            this.label71.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(126, 17);
-            this.label71.TabIndex = 36;
-            this.label71.Text = "Date de debut : ";
-            // 
-            // dateFinCmdRevue
-            // 
-            this.dateFinCmdRevue.Location = new System.Drawing.Point(631, 127);
-            this.dateFinCmdRevue.Name = "dateFinCmdRevue";
-            this.dateFinCmdRevue.Size = new System.Drawing.Size(223, 22);
-            this.dateFinCmdRevue.TabIndex = 37;
-            // 
-            // label72
-            // 
-            this.label72.AutoSize = true;
-            this.label72.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label72.Location = new System.Drawing.Point(465, 131);
-            this.label72.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label72.Name = "label72";
-            this.label72.Size = new System.Drawing.Size(103, 17);
-            this.label72.TabIndex = 38;
-            this.label72.Text = "Date de fin : ";
-            // 
-            // dateDebCmdRevue
-            // 
-            this.dateDebCmdRevue.Location = new System.Drawing.Point(631, 58);
-            this.dateDebCmdRevue.Name = "dateDebCmdRevue";
-            this.dateDebCmdRevue.Size = new System.Drawing.Size(223, 22);
-            this.dateDebCmdRevue.TabIndex = 39;
             // 
             // FrmMediatek
             // 

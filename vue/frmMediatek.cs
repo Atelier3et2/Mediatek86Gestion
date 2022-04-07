@@ -1289,7 +1289,11 @@ namespace Mediatek86.vue
 
         #endregion
 
-
+        /// <summary>
+        /// Recherche un Livres , l'affiche et affiche ses commandes si il est disponnible
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnRechercherLivres_Click(object sender, EventArgs e)
         {
             lesSuivis = controle.getAllSuivis();
@@ -1301,47 +1305,109 @@ namespace Mediatek86.vue
                 Livre livre = lesLivres.Find(x => x.Id.Equals(txtNumeroLivreRecherche.Text));
                 if (livre != null)
                 {
-
-                    livres.Add(livre);
-                    RemplirLivresListe(livres, dgvSearchLivreCmd);
-                    txtNumLivreCmd.Text = livre.Id;
-                    txtNumLivreCmd.Enabled = false;
-                    lesSuivis = controle.getAllSuivis();
-                    List<Commande> CommandesOfId = lesCommandes.FindAll(x => x.IdLivreDvd.Equals(livre.Id));
-                    bdgCommandes.DataSource = CommandesOfId;
-                    dgvCommandeLivres.DataSource = bdgCommandes;
-                    dgvCommandeLivres.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                    if (dgvCommandeLivres.CurrentCell != null)
-                    {
-                        remplirInfoCommande();
+                    if (livre.Id != txtNumLivreCmd.Text)
+                    { 
+                        livres.Add(livre);
+                        txtNumLivreCmd.Text = livre.Id;
+                        RemplirLivresListe(livres, dgvSearchLivreCmd);
+                        remplirLstCmdLivres(controle.GetAllCommandes(), livre.Id);
+                        
                     }
                     else
                     {
-                        MessageBox.Show("numéro introuvable");
-
+                        MessageBox.Show("Le numero entrée est identique à l'ancien");
                     }
 
                 }
+                else
+                {
+                    MessageBox.Show("Le numéro entré ne correspond à aucun livre");
+                }
 
 
+            }
+            else
+            {
+                MessageBox.Show("Pas de numero de livre entrée");
             }
 
 
         }
 
-
-        private void tabCmdLivres_Enter(object sender, EventArgs e)
+        /// <summary>
+        /// Remplis la datagriedview de commande de livres
+        /// </summary>
+        /// <param name="id"></param>
+        private void remplirLstCmdLivres(List<Commande> Commandes, string id)
         {
-            txtNumDvdCmd.Enabled = false;
-            txtNumLivreCmd.Enabled = false;
-            zoneNewCmdEnable(false);
+           
+
+            List<Commande> CommandesOfId = Commandes.FindAll(x => x.IdLivreDvd.Equals(id));
+            if (CommandesOfId.Count <= 0)
+            {
+                MessageBox.Show("Il n'existe pas ou plus de commande pour cette revue");
+            }
+            bdgCommandes.DataSource = CommandesOfId;
+            dgvCommandeLivres.DataSource = bdgCommandes;
+            dgvCommandeLivres.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            
+        
+
+        }
+        /// <summary>
+        /// Defini quelles zones acceptent les actions utilisateurs
+        /// </summary>
+        /// <param name="saisie"></param>
+        private void zoneNewCmdEnable(bool saisie)
+        {
+
+            TxtNbExemplaireCmdLivre.Enabled = saisie;
+            txtMontantCmdLivre.Enabled = saisie;
+            cbxSuiviCmdLivre.Enabled = !saisie;
+            btnModifier.Enabled = !saisie;
+            btnSupprimer.Enabled = !saisie;
+            btnAnnuler.Enabled = saisie;
+            btnValiderCmdLivre.Enabled = saisie;
+            btnNewCmd.Enabled = !saisie;
+            if (dgvCommandeLivres.CurrentCell == null)
+            {
+                btnModifier.Enabled = false;
+                cbxSuiviCmdLivre.Enabled = false;
+                btnSupprimer.Enabled = false;
+            }
+            if(txtNumLivreCmd.Text == "")
+            {
+                btnNewCmd.Enabled = false;
+            }
 
 
         }
 
+        /// <summary>
+        /// A chaque chargement de l'onglet , initialise certaines données. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
+        private void tabCmdLivres_Enter(object sender, EventArgs e)
+        {
+            lesCommandes = controle.GetAllCommandes();
+            lesSuivis = controle.getAllSuivis();
+            txtNumLivreCmd.Enabled = false;
+            zoneNewCmdEnable(false);
+            
+         
+
+        }
+
+        /// <summary>
+        /// Créer une  nouvelle commande de livres  si les conditions sont satisfaisantes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnValiderCmdLivre_Click(object sender, EventArgs e)
         {
-            if (txtMontantCmdLivre.Text != "" && TxtNbExemplaireCmdLivre.Text != "" && txtNumLivreCmd.Text != "")
+            if (txtMontantCmdLivre.Text != "" && TxtNbExemplaireCmdLivre.Text != "" )
             {
                 try
                 {
@@ -1354,8 +1420,7 @@ namespace Mediatek86.vue
                         Suivi unSuivi = lesSuivis.Find(x => x.Id.Equals("EC"));
                         Commande commande = new Commande(id, DateTime.Now, montant, nbExemplaire, idLivreDvd, unSuivi);
                         controle.CreerCommandeDocument(commande);
-                        updateDgvCommandesLivres();
-                        viderNouvelleCommande();
+                        remplirLstCmdLivres(controle.GetAllCommandes(), txtNumLivreCmd.Text);
                         zoneNewCmdEnable(false);
 
 
@@ -1377,12 +1442,20 @@ namespace Mediatek86.vue
 
         }
 
+        /// <summary>
+        /// Vide les champs pour créer une nouvelle commande
+        /// </summary>
         private void viderNouvelleCommande()
         {
             TxtNbExemplaireCmdLivre.Text = "";
             txtMontantCmdLivre.Text = "";
+            cbxSuiviCmdLivre.Text = "";
         }
-
+        /// <summary>
+        /// Evenement sur changement de ligne sur la dgv : valorise les champs .
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dgvCommandeLivres_SelectionChanged(object sender, EventArgs e)
         {
 
@@ -1391,6 +1464,7 @@ namespace Mediatek86.vue
                 try
                 {
                     remplirInfoCommande();
+                    zoneNewCmdEnable(false);
                 }
                 catch
                 {
@@ -1401,7 +1475,9 @@ namespace Mediatek86.vue
 
         }
 
-
+        /// <summary>
+        /// Valorise les champs
+        /// </summary>
         private void remplirInfoCommande()
         {
 
@@ -1432,11 +1508,15 @@ namespace Mediatek86.vue
             remplirCbxSuiviCmd(lstSuivisModif);
             txtMontantCmdLivre.Text = commande.Montant.ToString();
             TxtNbExemplaireCmdLivre.Text = commande.NbExemplaire.ToString();
-            zoneNewCmdEnable(false);
+            
 
 
         }
 
+        /// <summary>
+        /// Valorise la combobox suivi
+        /// </summary>
+        /// <param name="lstSuivisModif"></param>
         private void remplirCbxSuiviCmd(List<Suivi> lstSuivisModif)
         {
 
@@ -1445,7 +1525,11 @@ namespace Mediatek86.vue
             cbxSuiviCmdLivre.DataSource = bdgSuivis;
             cbxSuiviCmdLivre.SelectedIndex = cbxSuiviCmdLivre.FindStringExact(commande.Suivi.Libelle);
         }
-
+        /// <summary>
+        /// Evenements sur la modification d'un champs 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnModifier_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Souhaitez-vous vraiment modifier l'etape de suivi de la commande ?  ", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -1456,8 +1540,7 @@ namespace Mediatek86.vue
                 {
                     commande.Suivi = (Suivi)cbxSuiviCmdLivre.SelectedItem;
                     controle.updateCommandeDocument(commande);
-                    updateDgvCommandesLivres();
-                    remplirInfoCommande();
+                    remplirLstCmdLivres(controle.GetAllCommandes(), txtNumLivreCmd.Text);
 
                 }
 
@@ -1465,60 +1548,39 @@ namespace Mediatek86.vue
 
 
         }
-
+        /// <summary>
+        /// Evenement sur le bouton annuler commande livres
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAnnuler_Click(object sender, EventArgs e)
         {
 
             if (MessageBox.Show("Souhaitez-vous annuler la saisie d'une commande ?  ", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 viderNouvelleCommande();
+                remplirInfoCommande();
                 zoneNewCmdEnable(false);
             }
 
         }
 
+        /// <summary>
+        /// Evenement sur le bouton creer une nouvelle commande livres
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnNewCmd_Click(object sender, EventArgs e)
         {
-
-
             viderNouvelleCommande();
             zoneNewCmdEnable(true);
-            updateDgvCommandesLivres();
-
-
 
         }
-
-        private void updateDgvCommandesLivres()
-        {
-            if (dgvSearchLivreCmd.CurrentCell != null)
-            {
-                List<Commande> CommandesOfId = lesCommandes.FindAll(x => x.IdLivreDvd.Equals(txtNumLivreCmd.Text));
-                bdgCommandes.DataSource = CommandesOfId;
-                dgvCommandeLivres.DataSource = bdgCommandes;
-                dgvCommandeLivres.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                
-
-
-            }
-        }
-
-        private void zoneNewCmdEnable(bool saisie)
-        {
-
-            TxtNbExemplaireCmdLivre.Enabled = saisie;
-            txtMontantCmdLivre.Enabled = saisie;
-            cbxSuiviCmdLivre.Enabled = !saisie;
-            btnModifier.Enabled = !saisie;
-            btnAnnuler.Enabled = saisie;
-            btnValiderCmdLivre.Enabled = saisie;
-            
-
-
-
-
-        }
-
+        /// <summary>
+        /// Evenement sur le bouton supprimer commmande livre
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSupprimer_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Souhaitez-vous supprimer cette commande ?  ", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -1529,7 +1591,7 @@ namespace Mediatek86.vue
                 {
                     zoneNewCmdEnable(false);
                     controle.deleteCmdLivre(commande);
-                    updateDgvCommandesLivres();
+                    remplirLstCmdLivres(controle.GetAllCommandes(), txtNumLivreCmd.Text);
                 }
                 else
                 {
@@ -1538,13 +1600,25 @@ namespace Mediatek86.vue
 
             }
         }
-
+        //DVD-------------------------------------------------------------------------------------------------------------------
+        //DVD--------------------------------------------------------------------------------------------------------------------
+        //DVD--------------------------------------------------------------------------------------------------------------------
+        //DVD-----------------------------------------------------------------------------------------------------------------
+        //DVD-------------------------------------------------------------------------------------------------------------------
+        //DVD-------------------------------------------------------------------------------------------------------------------
+        //DVD--------------------------------------------------------------------------------------------------------------------
+        //DVD-------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Recherche numero dvd et valorise les dgv 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnRechercherDvd_Click(object sender, EventArgs e)
         {
 
             lesSuivis = controle.getAllSuivis();
-            lesDvd = controle.GetAllDvd();
             lesCommandes = controle.GetAllCommandes();
+            lesDvd = controle.GetAllDvd();
             if (!txtNumDvd.Text.Equals(""))
             {
                 
@@ -1559,17 +1633,7 @@ namespace Mediatek86.vue
                         RemplirDvdListe(Dvds, dgvRechercheDvd);
                         txtNumDvdCmd.Text = dvd.Id;
                         txtNumDvdCmd.Enabled = false;
-                        lesSuivis = controle.getAllSuivis();
-                        List<Commande> CommandesOfId = lesCommandes.FindAll(x => x.IdLivreDvd.Equals(dvd.Id));
-                        
-                            bdgCommandesDvd.DataSource = CommandesOfId;
-                            dgvCmdDvd.DataSource = bdgCommandesDvd;                       
-                            dgvCmdDvd.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                        if (CommandesOfId.Count == 0)
-                        {
-                            MessageBox.Show("Pas de commande trouvé");
-                        }
-
+                        remplirLstCmdDvd(lesCommandes ,dvd.Id);
 
                     }
                     else
@@ -1586,7 +1650,9 @@ namespace Mediatek86.vue
 
             }
         }
-
+        /// <summary>
+        /// Valorise les champs
+        /// </summary>
         private void remplirInfoCommandeDvd()
         {
             
@@ -1617,11 +1683,14 @@ namespace Mediatek86.vue
             remplirCbxSuiviCmdDvd(lstSuivisModif);
             txtMontantDvd.Text = commande.Montant.ToString();
             txtNbExemplaireDvd.Text = commande.NbExemplaire.ToString();
-            zoneNewCmdEnable(false);
             
 
 
         }
+        /// <summary>
+        /// Valorise la combo box suivi de dvd
+        /// </summary>
+        /// <param name="lstSuivisModif"></param>
         private void remplirCbxSuiviCmdDvd(List<Suivi> lstSuivisModif)
         {
 
@@ -1631,17 +1700,24 @@ namespace Mediatek86.vue
             cbxSuiviDvd.SelectedIndex = cbxSuiviDvd.FindStringExact(commande.Suivi.Libelle);
             
         }
+        /// <summary>
+        /// Evenement sur creer nouvelle commande dvd
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnNewCmdDvd_Click(object sender, EventArgs e)
         {
-
-
-            updateDgvCommandesDvd();
+            remplirLstCmdDvd(controle.GetAllCommandes(), txtNumDvdCmd.Text);
             zoneNewCmdDvdEnable(true);
             viderNouvelleCommandeDvd();
 
-
         }
 
+        /// <summary>
+        /// Evenement sur btn annuler commande
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAnnulerCmdDvd_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Souhaitez-vous annuler la saisie d'une commande ?  ", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -1651,20 +1727,27 @@ namespace Mediatek86.vue
             }
 
         }
-        private void updateDgvCommandesDvd()
+        private void remplirLstCmdDvd(List<Commande> Commandes, string id)
         {
-            lesCommandes = controle.GetAllCommandes();
-            if (dgvCmdDvd.CurrentCell != null)
+                  
+            List<Commande> CommandesOfId = Commandes.FindAll(x => x.IdLivreDvd.Equals(id));
+            if(CommandesOfId.Count <= 0)
             {
-                List<Commande> CommandesOfId = lesCommandes.FindAll(x => x.IdLivreDvd.Equals(txtNumDvdCmd.Text));
-                bdgCommandesDvd.DataSource = CommandesOfId;
-                dgvCmdDvd.DataSource = bdgCommandesDvd;
-                dgvCmdDvd.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
+                MessageBox.Show("Il n'existe pas ou plus de commande pour cette revue");
+
 
             }
+            bdgCommandesDvd.DataSource = CommandesOfId;
+            dgvCmdDvd.DataSource = bdgCommandesDvd;
+            dgvCmdDvd.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
 
         }
-
+        /// <summary>
+        /// Determine les Zones qui accepte les actions utilisateurs 
+        /// </summary>
+        /// <param name="saisie"></param>
         private void zoneNewCmdDvdEnable(bool saisie)
         {
 
@@ -1673,22 +1756,42 @@ namespace Mediatek86.vue
             txtMontantDvd.Enabled = saisie;
             cbxSuiviDvd.Enabled = !saisie;          
             btnModifierCmdDvd.Enabled = !saisie;
+            btnSupprimerBtnDvd.Enabled = !saisie;
             btnAnnulerCmdDvd.Enabled = saisie;
             btnValiderCmdDvd.Enabled = saisie;
+            btnNewCmdDvd.Enabled = !saisie;
+            if (dgvCmdDvd.CurrentCell == null)
+            {
+                btnModifierCmdDvd.Enabled = false;
+                btnSupprimerBtnDvd.Enabled = false;
+                cbxSuiviDvd.Enabled = false;
 
-
-
+            }
+            if (txtNumDvdCmd.Text == "")
+            {
+                btnNewCmdDvd.Enabled = false;
+            }
 
         }
+       
+        /// <summary>
+        /// VIde les chmpas pour une nouvelle commande de dvd
+        /// </summary>
         private void viderNouvelleCommandeDvd()
         {
             txtNbExemplaireDvd.Text = "";
             txtMontantDvd.Text = "";
+            cbxSuiviDvd.Text = "";
         }
 
+        /// <summary>
+        /// Evenement sur bouton valider commande dvd
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnValiderCmdDvd_Click(object sender, EventArgs e)
         {
-            if (txtMontantDvd.Text != "" && txtNbExemplaireDvd.Text != "" && txtNumDvdCmd.Text != "")
+            if (txtMontantDvd.Text != "" && txtNbExemplaireDvd.Text != "" )
             {
                 try
                 {
@@ -1701,8 +1804,9 @@ namespace Mediatek86.vue
                         Suivi unSuivi = lesSuivis.Find(x => x.Id.Equals("EC"));
                         Commande commande = new Commande(id, DateTime.Now, montant, nbExemplaire, idLivreDvd, unSuivi);
                         controle.CreerCommandeDocument(commande);
-                        updateDgvCommandesDvd();
                         viderNouvelleCommandeDvd();
+                        remplirLstCmdDvd(controle.GetAllCommandes(), txtNumDvdCmd.Text);
+                        
                         zoneNewCmdDvdEnable(false);
 
 
@@ -1720,7 +1824,11 @@ namespace Mediatek86.vue
             }
 
         }
-
+        /// <summary>
+        /// Evenement sur le bouton modifier commande dvd
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnModifierCmdDvd_Click(object sender, EventArgs e)
         {
 
@@ -1732,27 +1840,28 @@ namespace Mediatek86.vue
                 {          
                     commande.Suivi = (Suivi)cbxSuiviDvd.SelectedItem;
                     controle.updateCommandeDocument(commande);
-                    updateDgvCommandesDvd();
-                    remplirInfoCommandeDvd();
-
+                    remplirLstCmdDvd(controle.GetAllCommandes(), txtNumDvdCmd.Text);
                 }
 
             }
 
         }
 
+        /// <summary>
+        /// Evenement sur bouton supprimer commmande dvd
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSupprimerBtnDvd_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Souhaitez-vous supprimer cette commande ?  ", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 Commande commande = (Commande)bdgCommandesDvd.List[bdgCommandesDvd.Position];
-
                 if (commande.Suivi.Id != "LI")
                 {
                     zoneNewCmdDvdEnable(false);
                     controle.deleteCmdLivre(commande);
-                    
-                    updateDgvCommandesDvd();
+                    remplirLstCmdDvd(controle.GetAllCommandes(), txtNumDvdCmd.Text);
                 }
                 else
                 {
@@ -1761,13 +1870,22 @@ namespace Mediatek86.vue
 
             }
         }
-
+        /// <summary>
+        /// Evenement sur changement page dvd
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tabCommandeDvd_Enter(object sender, EventArgs e)
         {
             txtNumDvdCmd.Enabled = false;
             zoneNewCmdDvdEnable(false);
+            
         }
-
+        /// <summary>
+        /// Evenement sur changement de selection sur la dgv
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dgvCmdDvd_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvCmdDvd.CurrentCell != null)
@@ -1781,21 +1899,35 @@ namespace Mediatek86.vue
                     MessageBox.Show("Le remplissage des informations à échoué");
                 }
             }
+            zoneNewCmdDvdEnable(false);
         }
 
-        private void remplirLstCmdRevue(string id)
+
+        /// <summary>
+        /// Remplire liste commande revue
+        /// </summary>
+        /// <param name="id"></param>
+        private void remplirLstCmdRevue(List<Abonnement> Abonnements, string id)
         {
-            lesAbonnements = controle.getAllAbonnements();
-            List<Abonnement> AbonnementsOfId = lesAbonnements.FindAll(x => x.IdRevue.Equals(id));
+           
+            List<Abonnement> AbonnementsOfId = Abonnements.FindAll(x => x.IdRevue.Equals(id));
             if (AbonnementsOfId.Count <= 0 )
             {
-                MessageBox.Show("Il n'existe pas ou plus de commande pour cette revue");
+              
+                     MessageBox.Show("Il n'existe pas ou plus de commande pour cette revue");
+                
             }
             bdgAbonnements.DataSource = AbonnementsOfId;
             dgvCmdRevues.DataSource = bdgAbonnements;
+            dgvCmdRevues.Columns["idRevue"].Visible = false;
             dgvCmdRevues.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             zoneNewCmdRevueEnable(false);
         }
+        /// <summary>
+        /// Evenement sur le bouton recherche
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnRechercherRevue_Click(object sender, EventArgs e)
         {
 
@@ -1814,7 +1946,7 @@ namespace Mediatek86.vue
                         txtNumCmdRevue.Text = revue.Id;
                         revues.Add(revue);
                         RemplirRevuesListe(revues, dgvRechercheRevue);
-                        remplirLstCmdRevue(revue.Id);
+                        remplirLstCmdRevue(controle.getAllAbonnements(), revue.Id);
                     }
                     else
                     {
@@ -1833,9 +1965,6 @@ namespace Mediatek86.vue
                 MessageBox.Show("Le numero de revue saisi est nul");
 
             }
-
-
-
 
 
             if (!txtNumeroLivreRecherche.Text.Equals(""))
@@ -1871,7 +2000,11 @@ namespace Mediatek86.vue
             }
 
         }
-
+        /// <summary>
+        /// Evenement sur bouton valider revue
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCmdValiderCmdRevue_Click(object sender, EventArgs e)
         {
             if (txtCmdMontantRevue.Text != "" )
@@ -1889,7 +2022,7 @@ namespace Mediatek86.vue
                             DateTime dateFin = dateFinCmdRevue.Value;
                             Abonnement abonnement = new Abonnement(id, DateTime.Now, montant, dateFin, idRevue);
                             controle.creerCmdRevue(abonnement);
-                            remplirLstCmdRevue(txtNumCmdRevue.Text);
+                            remplirLstCmdRevue(controle.getAllAbonnements(), txtNumCmdRevue.Text);
                             viderNouvelleAbonnement();
                             zoneNewCmdRevueEnable(false);
                         }
@@ -1914,7 +2047,10 @@ namespace Mediatek86.vue
                 MessageBox.Show("Certains champs sont vides", "Information");
             }
         }
-
+        /// <summary>
+        /// Evennement sur bouton creer nouvelle abonnement revue
+        /// </summary>
+        /// <param name="saisie"></param>
         private void zoneNewCmdRevueEnable(bool saisie)
         {
             txtCmdMontantRevue.Enabled = saisie;
@@ -1934,19 +2070,29 @@ namespace Mediatek86.vue
 
 
         }
-
+        /// <summary>
+        /// Vide champs nouvelle abonnement
+        /// </summary>
         private void viderNouvelleAbonnement()
         {
             txtCmdMontantRevue.Text = "";
 
         }
-
+        /// <summary>
+        /// Creer nouvelle commande revue
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnNewCmdRevue_Click(object sender, EventArgs e)
         {
             viderNouvelleAbonnement();
             zoneNewCmdRevueEnable(true);
         }
-
+        /// <summary>
+        /// Evenement sur annuler commande revue
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAnnulerCmdRevue_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Souhaitez-vous annuler la saisie d'une commande ?  ", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -1956,7 +2102,11 @@ namespace Mediatek86.vue
                 remplirZoneCmdRevue();
             }
         }
-
+        /// <summary>
+        /// Evenement sur bouton renouveller abonnnement
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnRenouvellerCmdRevue_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Souhaitez-vous vraiment renouveller cet abonnement?  ", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -1968,7 +2118,7 @@ namespace Mediatek86.vue
                 {
                     abonnement.DateFinAbonnement = dateFinCmdRevue.Value;
                     controle.updateCmdRevue(abonnement);
-                    remplirLstCmdRevue(txtNumCmdRevue.Text);
+                    remplirLstCmdRevue(controle.getAllAbonnements(), txtNumCmdRevue.Text);
                 }
                 else
                 {
@@ -1979,7 +2129,14 @@ namespace Mediatek86.vue
 
             }
         }
-
+        /// <summary>
+        /// Fonction qui determine is la date d'un exemplaire d'une revue est comprise dans la date de l'abonnement
+        /// Renvoie true si vrai
+        /// </summary>
+        /// <param name="dateDebut"></param>
+        /// <param name="dateFin"></param>
+        /// <param name="dateParution"></param>
+        /// <returns></returns>
         private bool isDeleteRevuePossible(DateTime dateDebut, DateTime dateFin, DateTime dateParution)
         {
             if(dateDebut.CompareTo(dateParution) <= 0 &&  dateFin.CompareTo(dateParution) >= 0)
@@ -1992,7 +2149,11 @@ namespace Mediatek86.vue
             }
 
         }
-
+        /// <summary>
+        /// Evenement sur bouton supprimer commande revue
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSupprimerCmdRevue_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Souhaitez-vous supprimer cette abonnement ?  ", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -2014,7 +2175,7 @@ namespace Mediatek86.vue
                 if (isDeletePossible)
                 {
                     controle.deleteCmdRevue(abonnement);
-                    remplirLstCmdRevue(txtNumCmdRevue.Text);
+                    remplirLstCmdRevue(controle.getAllAbonnements(), txtNumCmdRevue.Text);
                     
                 }
                 }
@@ -2024,7 +2185,11 @@ namespace Mediatek86.vue
                 }
 
             }
-
+        /// <summary>
+        /// Evenement sur changement de selection sur la dgv (valorise les champs)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dgvCmdRevues_SelectionChanged(object sender, EventArgs e)
         {
             zoneNewCmdEnable(false);
@@ -2033,7 +2198,9 @@ namespace Mediatek86.vue
 
 
         }
-
+        /// <summary>
+        /// Remplir zone Commande revue
+        /// </summary>
         private void remplirZoneCmdRevue()
         {
             if (bdgAbonnements.Count != 0)
@@ -2044,12 +2211,118 @@ namespace Mediatek86.vue
                 dateFinCmdRevue.Value = abonnement.DateFinAbonnement;
             }
         }
-
+        /// <summary>
+        /// Initialise certaines valeurs sur l'evenement de changement d'onglet
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tabCmdRevue_Enter(object sender, EventArgs e)
         {
+            lesAbonnements = controle.getAllAbonnements();
             zoneNewCmdRevueEnable(false);
             dateDebCmdRevue.Enabled = false;
             txtNumCmdRevue.Enabled = false;
+        }
+        /// <summary>
+        /// Evenement sur click de colonne - tri .
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dgvCmdRevues_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+           
+            string titreColonne = dgvCmdRevues.Columns[e.ColumnIndex].HeaderText;
+            List<Abonnement> sortedList = new List<Abonnement>();
+            switch (titreColonne)
+            {
+                case "Id":
+                    sortedList = lesAbonnements.OrderBy(o => o.Id).ToList();
+                    break;
+                case "DateCommande":
+                    sortedList = lesAbonnements.OrderBy(o => o.DateCommande).ToList();
+                    break;
+
+                case "Montant":
+                    sortedList = lesAbonnements.OrderBy(o => o.Montant).ToList();
+                    break;
+                case "DateFinAbonnement":
+                    sortedList = lesAbonnements.OrderBy(o => o.DateFinAbonnement).ToList();
+                    break;
+                case "IdRevue":
+                    sortedList = controle.getAllAbonnements();
+                    break;
+
+            }
+
+            remplirLstCmdRevue(sortedList, txtNumLivreCmd.Text);
+        }
+
+        private void dgvCmdDvd_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+
+          
+                string titreColonne = dgvCmdDvd.Columns[e.ColumnIndex].HeaderText;
+                List<Commande> sortedList = new List<Commande>();
+                switch (titreColonne)
+                {
+                    case "Id":
+                        sortedList = lesCommandes.OrderBy(o => o.Id).ToList();
+                        break;
+                    case "DateCommande":
+                        sortedList = lesCommandes.OrderBy(o => o.DateCommande).ToList();
+                        break;
+
+                    case "Montant":
+                        sortedList = lesCommandes.OrderBy(o => o.Montant).ToList();
+                        break;
+                    case "NbExemplaire":
+                        sortedList = lesCommandes.OrderBy(o => o.NbExemplaire).ToList();
+                        break;
+                    case "IdLivreDvd":
+                        sortedList = controle.GetAllCommandes();
+                        break;
+                    case "Suivi":
+                       sortedList = controle.GetAllCommandes();
+                    break;
+
+            }
+
+            remplirLstCmdDvd(sortedList, txtNumDvdCmd.Text); ;
+            
+        }
+
+        private void dgvCommandeLivres_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            
+            string titreColonne = dgvCmdDvd.Columns[e.ColumnIndex].HeaderText;
+            List<Commande> sortedList = new List<Commande>();
+            switch (titreColonne)
+            {
+                case "Id":
+                    sortedList = lesCommandes.OrderBy(o => o.Id).ToList();
+                    break;
+                case "DateCommande":
+                    sortedList = lesCommandes.OrderBy(o => o.DateCommande).ToList();
+                    break;
+
+                case "Montant":
+                    sortedList = lesCommandes.OrderBy(o => o.Montant).ToList();
+                    break;
+                case "NbExemplaire":
+                    sortedList = lesCommandes.OrderBy(o => o.NbExemplaire).ToList();
+                    break;
+                case "IdLivreDvd":
+                    sortedList = controle.GetAllCommandes();
+                    break;
+                case "Suivi":
+                    sortedList = controle.GetAllCommandes();
+                    break;
+
+            }
+
+            
+            remplirLstCmdLivres(sortedList, txtNumLivreCmd.Text);
+
         }
     }
 }
