@@ -2230,8 +2230,10 @@ namespace Mediatek86.vue
         /// <param name="e"></param>
         private void dgvCmdRevues_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-           
+
+            lesAbonnements = controle.getAllAbonnements();
             string titreColonne = dgvCmdRevues.Columns[e.ColumnIndex].HeaderText;
+            
             List<Abonnement> sortedList = new List<Abonnement>();
             switch (titreColonne)
             {
@@ -2254,7 +2256,7 @@ namespace Mediatek86.vue
 
             }
 
-            remplirLstCmdRevue(sortedList, txtNumLivreCmd.Text);
+            remplirLstCmdRevue(sortedList, txtNumCmdRevue.Text);
         }
 
         private void dgvCmdDvd_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
