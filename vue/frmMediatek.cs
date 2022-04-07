@@ -1919,7 +1919,7 @@ namespace Mediatek86.vue
             }
             bdgAbonnements.DataSource = AbonnementsOfId;
             dgvCmdRevues.DataSource = bdgAbonnements;
-            dgvCmdRevues.Columns["idRevue"].Visible = false;
+            
             dgvCmdRevues.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             zoneNewCmdRevueEnable(false);
         }
@@ -2294,7 +2294,8 @@ namespace Mediatek86.vue
         private void dgvCommandeLivres_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             
-            string titreColonne = dgvCmdDvd.Columns[e.ColumnIndex].HeaderText;
+
+            string titreColonne = dgvCommandeLivres.Columns[e.ColumnIndex].HeaderText;
             List<Commande> sortedList = new List<Commande>();
             switch (titreColonne)
             {
