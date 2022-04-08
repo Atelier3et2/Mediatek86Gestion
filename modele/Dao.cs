@@ -20,6 +20,35 @@ namespace Mediatek86.modele
         /// Retourne tous les genres à partir de la BDD
         /// </summary>
         /// <returns>Liste d'objets Genre</returns>
+        /// <summary>
+        /// Controle si l'utillisateur a le droit de se connecter (login, pwd)
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="pwd"></param>
+        /// <returns></returns>
+        public static int ControleAuthentification(string login, string pwd)
+        {
+            string req = "select * from utilisateur";
+            req += " where login=@login and password=SHA2(@pwd, 256);";
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("@login", login);
+            parameters.Add("@pwd", pwd);
+            BddMySql curs = BddMySql.GetInstance(connectionString);
+            curs.ReqSelect(req, parameters);
+            int idservice = 0;
+            if (curs.Read())
+            {
+
+               idservice = (int)curs.Field("idservice");
+                curs.Close();
+                return idservice;
+            }
+            else
+            {
+                curs.Close();
+                return idservice;
+            }
+        }
         public static List<Categorie> GetAllGenres()
         {
             List<Categorie> lesGenres = new List<Categorie>();

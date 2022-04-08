@@ -198,7 +198,7 @@ namespace Mediatek86.vue
             this.dgvLivresListe = new System.Windows.Forms.DataGridView();
             this.label6 = new System.Windows.Forms.Label();
             this.txbLivresTitreRecherche = new System.Windows.Forms.TextBox();
-            this.tabCmdRevues = new System.Windows.Forms.TabControl();
+            this.TabCtrl = new System.Windows.Forms.TabControl();
             this.tabCommandeDvd = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btnSupprimerBtnDvd = new System.Windows.Forms.Button();
@@ -271,7 +271,7 @@ namespace Mediatek86.vue
             ((System.ComponentModel.ISupportInitialize)(this.pcbLivresImage)).BeginInit();
             this.grpLivresRecherche.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLivresListe)).BeginInit();
-            this.tabCmdRevues.SuspendLayout();
+            this.TabCtrl.SuspendLayout();
             this.tabCommandeDvd.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -2256,23 +2256,23 @@ namespace Mediatek86.vue
             this.txbLivresTitreRecherche.TabIndex = 3;
             this.txbLivresTitreRecherche.TextChanged += new System.EventHandler(this.TxbLivresTitreRecherche_TextChanged);
             // 
-            // tabCmdRevues
+            // TabCtrl
             // 
-            this.tabCmdRevues.Controls.Add(this.tabLivres);
-            this.tabCmdRevues.Controls.Add(this.tabDvd);
-            this.tabCmdRevues.Controls.Add(this.tabRevues);
-            this.tabCmdRevues.Controls.Add(this.tabReceptionRevue);
-            this.tabCmdRevues.Controls.Add(this.tabCmdLivres);
-            this.tabCmdRevues.Controls.Add(this.tabCommandeDvd);
-            this.tabCmdRevues.Controls.Add(this.tabCmdRevue);
-            this.tabCmdRevues.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabCmdRevues.ItemSize = new System.Drawing.Size(49, 18);
-            this.tabCmdRevues.Location = new System.Drawing.Point(0, 0);
-            this.tabCmdRevues.Margin = new System.Windows.Forms.Padding(4);
-            this.tabCmdRevues.Name = "tabCmdRevues";
-            this.tabCmdRevues.SelectedIndex = 0;
-            this.tabCmdRevues.Size = new System.Drawing.Size(1177, 811);
-            this.tabCmdRevues.TabIndex = 0;
+            this.TabCtrl.Controls.Add(this.tabLivres);
+            this.TabCtrl.Controls.Add(this.tabDvd);
+            this.TabCtrl.Controls.Add(this.tabRevues);
+            this.TabCtrl.Controls.Add(this.tabReceptionRevue);
+            this.TabCtrl.Controls.Add(this.tabCmdLivres);
+            this.TabCtrl.Controls.Add(this.tabCommandeDvd);
+            this.TabCtrl.Controls.Add(this.tabCmdRevue);
+            this.TabCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TabCtrl.ItemSize = new System.Drawing.Size(49, 18);
+            this.TabCtrl.Location = new System.Drawing.Point(0, 0);
+            this.TabCtrl.Margin = new System.Windows.Forms.Padding(4);
+            this.TabCtrl.Name = "TabCtrl";
+            this.TabCtrl.SelectedIndex = 0;
+            this.TabCtrl.Size = new System.Drawing.Size(1177, 811);
+            this.TabCtrl.TabIndex = 0;
             // 
             // tabCommandeDvd
             // 
@@ -2815,7 +2815,7 @@ namespace Mediatek86.vue
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1177, 811);
-            this.Controls.Add(this.tabCmdRevues);
+            this.Controls.Add(this.TabCtrl);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FrmMediatek";
             this.Text = "Gestion Médiathèque";
@@ -2857,7 +2857,7 @@ namespace Mediatek86.vue
             this.grpLivresRecherche.ResumeLayout(false);
             this.grpLivresRecherche.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLivresListe)).EndInit();
-            this.tabCmdRevues.ResumeLayout(false);
+            this.TabCtrl.ResumeLayout(false);
             this.tabCommandeDvd.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
@@ -3037,7 +3037,7 @@ namespace Mediatek86.vue
         private System.Windows.Forms.DataGridView dgvLivresListe;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txbLivresTitreRecherche;
-        private System.Windows.Forms.TabControl tabCmdRevues;
+        private System.Windows.Forms.TabControl TabCtrl;
         private System.Windows.Forms.DataGridView dgvSearchLivreCmd;
         private System.Windows.Forms.Button btnValiderCmdLivre;
         private System.Windows.Forms.TextBox txtNumLivreCmd;

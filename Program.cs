@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mediatek86.controleur;
+using Mediatek86.vue;
 
 
 namespace Mediatek86
@@ -18,8 +19,8 @@ namespace Mediatek86
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new FrmMediatek());
-            new Controle();
+            Controle controle = new Controle();
+            Application.Run(new FrmAuthentification(controle));       
         }
     }
 }

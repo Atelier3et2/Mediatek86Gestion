@@ -6,7 +6,7 @@ using Mediatek86.vue;
 
 namespace Mediatek86.controleur
 {
-    internal class Controle
+    public class Controle
     {
         private readonly List<Livre> lesLivres;
         private readonly List<Dvd> lesDvd;
@@ -17,6 +17,10 @@ namespace Mediatek86.controleur
         private  List<Commande> lesCommandes;
         private readonly List<Suivi> lesSuivis;
         private readonly List<Abonnement> lesAbonnements;
+        private FrmAuthentification frmAuthentification;
+        private FrmMediatek frameMediatek;
+        
+
 
         /// <summary>
         /// Ouverture de la fenêtre
@@ -31,9 +35,43 @@ namespace Mediatek86.controleur
             lesPublics = Dao.GetAllPublics();
             lesCommandes = Dao.GetAllCommandes();
             lesSuivis = Dao.getAllSuivis();
-            lesAbonnements = Dao.getAllAbonnements();
-            FrmMediatek frmMediatek = new FrmMediatek(this);
-            frmMediatek.ShowDialog();
+            lesAbonnements = Dao.getAllAbonnements();            
+           
+        }
+
+        /// <summary>
+        /// Demande de controler l'authentification 
+        /// Si oui alors : ouverture de la fenêtre principale.
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="pwd"></param>
+        /// <returns></returns>
+        public int ControleAuthentification(string login, string pwd, FrmAuthentification frmAuthentification)
+        {
+            int service = 0;
+            if ((service = Dao.ControleAuthentification(login, pwd)) != 0)
+            {
+                
+                if(service == 3 || service == 2 || service == 1){
+
+                    frmAuthentification.Hide();
+                    frameMediatek = new FrmMediatek(this, service);
+                    frameMediatek.Closed += (s, args) => frmAuthentification.Close();
+                    frameMediatek.ShowDialog();
+
+
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            else
+            {
+                return 0;
+            }
+            return 2;
+
         }
 
         /// <summary>
