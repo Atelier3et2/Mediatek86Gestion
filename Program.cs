@@ -20,7 +20,7 @@ namespace Mediatek86
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Controle controle = new Controle();
-            Application.Run(new FrmAuthentification(controle));       
+            Application.Run(new Alerte(controle));       
         }
     }
 }

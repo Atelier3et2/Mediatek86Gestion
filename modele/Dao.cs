@@ -86,6 +86,26 @@ namespace Mediatek86.modele
             curs.Close();
             return lesRayons;
         }
+        /// <summary>
+        /// Retourne tous les ids des abonnements qui arrive à expiration selon le trigger present dans la BDD
+        /// </summary>
+        /// <returns>Collection d'objets Abonnements</returns>
+        public static List<string> getLstExpiration()
+        {
+            List<string> lesIdAbonnements = new List<string>();
+            string req = "Call whoExpire(); ";
+
+            BddMySql curs = BddMySql.GetInstance(connectionString);
+            curs.ReqSelect(req, null);
+
+            while (curs.Read())
+            {
+                string id = (string)curs.Field("id");
+                lesIdAbonnements.Add(id);
+            }
+            curs.Close();
+            return lesIdAbonnements;
+        }
 
         /// <summary>
         /// Retourne toutes les catégories de public à partir de la BDD

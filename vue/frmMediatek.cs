@@ -2150,7 +2150,7 @@ namespace Mediatek86.vue
         /// <param name="dateFin"></param>
         /// <param name="dateParution"></param>
         /// <returns></returns>
-        private bool isDeleteRevuePossible(DateTime dateDebut, DateTime dateFin, DateTime dateParution)
+        public bool isDeleteRevuePossible(DateTime dateDebut, DateTime dateFin, DateTime dateParution)
         {
             if (dateDebut.CompareTo(dateParution) <= 0 && dateFin.CompareTo(dateParution) >= 0)
             {

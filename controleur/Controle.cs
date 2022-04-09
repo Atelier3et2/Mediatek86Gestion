@@ -14,12 +14,12 @@ namespace Mediatek86.controleur
         private readonly List<Categorie> lesRayons;
         private readonly List<Categorie> lesPublics;
         private readonly List<Categorie> lesGenres;
-        private  List<Commande> lesCommandes;
+        private List<Commande> lesCommandes;
         private readonly List<Suivi> lesSuivis;
         private readonly List<Abonnement> lesAbonnements;
         private FrmAuthentification frmAuthentification;
         private FrmMediatek frameMediatek;
-        
+
 
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace Mediatek86.controleur
             lesPublics = Dao.GetAllPublics();
             lesCommandes = Dao.GetAllCommandes();
             lesSuivis = Dao.getAllSuivis();
-            lesAbonnements = Dao.getAllAbonnements();            
-           
+            lesAbonnements = Dao.getAllAbonnements();
+
         }
 
         /// <summary>
@@ -51,12 +51,11 @@ namespace Mediatek86.controleur
             int service = 0;
             if ((service = Dao.ControleAuthentification(login, pwd)) != 0)
             {
-                
-                if(service == 3 || service == 2 || service == 1){
+
+                if (service == 3 || service == 2 || service == 1) {
 
                     frmAuthentification.Hide();
                     frameMediatek = new FrmMediatek(this, service);
-                    frameMediatek.Closed += (s, args) => frmAuthentification.Close();
                     frameMediatek.ShowDialog();
 
 
@@ -121,7 +120,7 @@ namespace Mediatek86.controleur
 
         public List<Commande> GetAllCommandes()
         {
-            
+
             return Dao.GetAllCommandes();
         }
 
@@ -163,18 +162,18 @@ namespace Mediatek86.controleur
         public string getLastIdCommande()
         {
             return Dao.getLastIdCommande();
-            
+
         }
 
         public List<Suivi> getAllSuivis()
         {
             return lesSuivis;
-            
+
 
         }
         public bool updateCommandeDocument(Commande commande)
         {
-        
+
             return Dao.updateCommandeDocument(commande);
             this.lesCommandes = GetAllCommandes();
         }
@@ -182,7 +181,7 @@ namespace Mediatek86.controleur
         {
             return Dao.deleteCmdLivre(commande);
             this.lesCommandes = GetAllCommandes();
-           
+
 
         }
         public List<Abonnement> getAllAbonnements()
@@ -201,6 +200,11 @@ namespace Mediatek86.controleur
         public bool deleteCmdRevue(Abonnement abonnement)
         {
             return Dao.deleteCmdRevue(abonnement);
+        }
+
+        public List<string> getLstExpirations()
+        {
+            return Dao.getLstExpiration();
         }
 
     }
