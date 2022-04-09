@@ -2353,7 +2353,11 @@ namespace Mediatek86.vue
 
         private void TabCtrl_Enter(object sender, EventArgs e)
         {
-            (new Alerte(controle)).Show();
+            if(niveau != 3)
+            {
+                (new Alerte(controle)).Show();
+            }
+
         }
     }
     
