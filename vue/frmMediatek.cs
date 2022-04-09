@@ -2351,7 +2351,10 @@ namespace Mediatek86.vue
 
         }
 
-    
+        private void TabCtrl_Enter(object sender, EventArgs e)
+        {
+            (new Alerte(controle)).Show();
+        }
     }
     
 }

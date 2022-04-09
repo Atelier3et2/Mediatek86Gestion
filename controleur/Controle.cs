@@ -19,7 +19,7 @@ namespace Mediatek86.controleur
         private readonly List<Abonnement> lesAbonnements;
         private FrmAuthentification frmAuthentification;
         private FrmMediatek frameMediatek;
-
+        private int instance = 0;
 
 
         /// <summary>
@@ -53,10 +53,15 @@ namespace Mediatek86.controleur
             {
 
                 if (service == 3 || service == 2 || service == 1) {
+                    if (instance != 1)
+                    {
+                        frmAuthentification.Hide();
+                        instance = 1;
+                        frameMediatek = new FrmMediatek(this, service);
+                        frameMediatek.ShowDialog();
 
-                    frmAuthentification.Hide();
-                    frameMediatek = new FrmMediatek(this, service);
-                    frameMediatek.ShowDialog();
+                    }
+                    
 
 
                 }

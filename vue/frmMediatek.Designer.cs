@@ -2273,6 +2273,7 @@ namespace Mediatek86.vue
             this.TabCtrl.SelectedIndex = 0;
             this.TabCtrl.Size = new System.Drawing.Size(1177, 811);
             this.TabCtrl.TabIndex = 0;
+            this.TabCtrl.Enter += new System.EventHandler(this.TabCtrl_Enter);
             // 
             // tabCommandeDvd
             // 
@@ -3094,6 +3095,8 @@ namespace Mediatek86.vue
         private System.Windows.Forms.Label label72;
         private System.Windows.Forms.DateTimePicker dateFinCmdRevue;
         private System.Windows.Forms.Label label71;
+
+        
     }
 }
 
