@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mediatek86.controleur;
 using Mediatek86.vue;
+using Serilog;
 
 
 namespace Mediatek86
@@ -17,6 +18,9 @@ namespace Mediatek86
         [STAThread]
         static void Main()
         {
+            Log.Logger = new LoggerConfiguration().WriteTo.File("logs/log.txt").CreateLogger();
+
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Controle controle = new Controle();

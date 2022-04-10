@@ -4,6 +4,7 @@ using Mediatek86.bdd;
 using System;
 using System.Windows.Forms;
 using Mediatek86.controleur;
+using Serilog;
 
 namespace Mediatek86.modele
 {
@@ -15,7 +16,7 @@ namespace Mediatek86.modele
         private static readonly string password = "";
         private static readonly string database = "mediatek86";
         private static readonly string connectionString = "server=" + server + ";user id=" + userid + ";password=" + password + ";database=" + database + ";SslMode=none";
-
+        
         /// <summary>
         /// Retourne tous les genres à partir de la BDD
         /// </summary>
@@ -102,6 +103,7 @@ namespace Mediatek86.modele
             {
                 string id = (string)curs.Field("id");
                 lesIdAbonnements.Add(id);
+                
             }
             curs.Close();
             return lesIdAbonnements;

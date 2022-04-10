@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using Serilog;
 
 namespace Mediatek86.bdd
 {
@@ -36,6 +37,7 @@ namespace Mediatek86.bdd
             catch (MySqlException e)
             {
                 ErreurGraveBddNonAccessible(e);
+                Log.Fatal(e, "erreur bdd");
             }
         }
 
@@ -81,6 +83,7 @@ namespace Mediatek86.bdd
             catch (InvalidOperationException e)
             {
                 ErreurGraveBddNonAccessible(e);
+                Log.Fatal(e, "erreur bdd sur l'appel de la fonction reqSelect");
             }
         }
 
@@ -154,6 +157,7 @@ namespace Mediatek86.bdd
             catch (InvalidOperationException e)
             {
                 ErreurGraveBddNonAccessible(e);
+                Log.Fatal(e, "Erreur bdd sur l'appel de la fonction reqUpdate");
             }
         }
 
@@ -176,6 +180,7 @@ namespace Mediatek86.bdd
             MessageBox.Show("Base de données non accessibles", "Erreur grave");
             Console.WriteLine(e.Message);
             Environment.Exit(1);
+            
         }
 
 

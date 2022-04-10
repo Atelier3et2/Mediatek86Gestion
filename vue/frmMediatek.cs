@@ -5,6 +5,7 @@ using Mediatek86.metier;
 using Mediatek86.controleur;
 using System.Drawing;
 using System.Linq;
+using Serilog;
 
 namespace Mediatek86.vue
 {
@@ -202,9 +203,10 @@ namespace Mediatek86.vue
             {
                 pcbRevuesImage.Image = Image.FromFile(image);
             }
-            catch
+            catch(Exception e)
             {
                 pcbRevuesImage.Image = null;
+                Log.Information(e, "pcpRevuesImage null dans la fonction AfficheRevuesInfos");
             }
         }
 
@@ -297,9 +299,10 @@ namespace Mediatek86.vue
                     Revue revue = (Revue)bdgRevuesListe.List[bdgRevuesListe.Position];
                     AfficheRevuesInfos(revue);
                 }
-                catch
+                catch(Exception ex)
                 {
                     VideRevuesZones();
+                    Log.Fatal(ex, "DgvRevuesListe sur l'evenement selectionChanged à échoué");
                 }
             }
             else
@@ -520,10 +523,12 @@ namespace Mediatek86.vue
             try
             {
                 pcbLivresImage.Image = Image.FromFile(image);
+               
             }
-            catch
+            catch(Exception e)
             {
                 pcbLivresImage.Image = null;
+                Log.Information(e, "probleme dans la fonction AfficheLivresInfos");
             }
         }
 
@@ -615,10 +620,11 @@ namespace Mediatek86.vue
                 {
                     Livre livre = (Livre)bdgLivresListe.List[bdgLivresListe.Position];
                     AfficheLivresInfos(livre);
-                }
-                catch
+                }             
+                catch (Exception ex)
                 {
                     VideLivresZones();
+                    Log.Information(ex, "probleme dans la fonction DgvLivresListe sur l'evenement Selection Changed");
                 }
             }
             else
@@ -842,6 +848,7 @@ namespace Mediatek86.vue
             catch
             {
                 pcbDvdImage.Image = null;
+                Log.Information("pcbDvdImage ne contient pas d'image);
             }
         }
 
@@ -937,10 +944,11 @@ namespace Mediatek86.vue
                 catch
                 {
                     VideDvdZones();
+                    Log.Information("l'evenement SelectionChanged sur dgvDvdList à échoué ");
                 }
             }
             else
-            {
+            { 
                 VideDvdInfos();
             }
         }
@@ -1439,9 +1447,9 @@ namespace Mediatek86.vue
 
                     }
                 }
-                catch
+                catch(Exception exc)
                 {
-
+                    Log.Information(exc, "l'evenement valider cmdLivre à échoué ");
                     MessageBox.Show("Le nombre d'exemplaire doit etre numerique ", "Information");
                 }
             }
@@ -1829,6 +1837,7 @@ namespace Mediatek86.vue
                 {
 
                     MessageBox.Show("Le nombre d'exemplaire doit etre numerique ", "Information");
+                    Log.Information(" Le nombre d'exemplaire saisi n'etait pas numérique");
                 }
             }
             else
@@ -1910,6 +1919,7 @@ namespace Mediatek86.vue
                 catch
                 {
                     MessageBox.Show("Le remplissage des informations à échoué");
+                    Log.Information("Le remplissage des information à échoué");
                 }
             }
             zoneNewCmdDvdEnable(false);
@@ -2053,6 +2063,7 @@ namespace Mediatek86.vue
                 {
 
                     MessageBox.Show("Le montant doit etre numerique ", "Information");
+                    Log.Information("Le montant saisi n'etait pas numérique ");
                 }
             }
             else
