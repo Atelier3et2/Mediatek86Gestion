@@ -385,7 +385,7 @@ namespace Mediatek86.modele
                 };
                 BddMySql curs = BddMySql.GetInstance(connectionString);
                 curs.ReqUpdate(req, parameters);
-                curs.Close();
+              
                 return true;
             }
             catch
@@ -429,7 +429,7 @@ namespace Mediatek86.modele
                 };
                 BddMySql scCurs = BddMySql.GetInstance(connectionString);
                 scCurs.ReqUpdate(req2, scParameters);
-                scCurs.Close();
+               
                 
                 return true;
             }
@@ -457,7 +457,7 @@ namespace Mediatek86.modele
                 };
                 BddMySql curs = BddMySql.GetInstance(connectionString);
                 curs.ReqUpdate(req, parameters);
-                curs.Close();
+                
                 return true;
 
 
@@ -480,7 +480,7 @@ namespace Mediatek86.modele
                 };
                 BddMySql curs = BddMySql.GetInstance(connectionString);
                 curs.ReqUpdate(req, parameters);
-                curs.Close();
+            
 
 
                 string req2 = "delete from Commande where id = @id; ";
@@ -492,7 +492,7 @@ namespace Mediatek86.modele
                 };
                 BddMySql curs2 = BddMySql.GetInstance(connectionString);
                 curs2.ReqUpdate(req2, parameters2);
-                curs2.Close();
+             
                 return true;
 
             }
@@ -520,7 +520,6 @@ namespace Mediatek86.modele
                 };
                 BddMySql curs = BddMySql.GetInstance(connectionString);
                 curs.ReqUpdate(req, parameters);
-                curs.Close();
                 string req2 = "insert into abonnement values(@id, @dateFinAbonnement, @idRevue); ";
                 Dictionary<string, object> scParameters = new Dictionary<string, object>
                 {
@@ -531,7 +530,6 @@ namespace Mediatek86.modele
                 };
                 BddMySql scCurs = BddMySql.GetInstance(connectionString);
                 scCurs.ReqUpdate(req2, scParameters);
-                scCurs.Close();
 
                 return true;
             }
@@ -555,7 +553,7 @@ namespace Mediatek86.modele
                 };
                 BddMySql curs = BddMySql.GetInstance(connectionString);
                 curs.ReqUpdate(req, parameters);
-                curs.Close();
+               
 
 
                 string req2 = "delete from Commande where id = @id; ";
@@ -567,7 +565,6 @@ namespace Mediatek86.modele
                 };
                 BddMySql curs2 = BddMySql.GetInstance(connectionString);
                 curs2.ReqUpdate(req2, parameters2);
-                curs2.Close();
                 return true;
 
             }
@@ -596,7 +593,7 @@ namespace Mediatek86.modele
                 };
                 BddMySql curs = BddMySql.GetInstance(connectionString);
                 curs.ReqUpdate(req, parameters);
-                curs.Close();
+
                 return true;
 
 
