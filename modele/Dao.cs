@@ -11,9 +11,9 @@ namespace Mediatek86.modele
     public static class Dao
     {
 
-        private static readonly string server = "localhost";
-        private static readonly string userid = "root";
-        private static readonly string password = "";
+        private static readonly string server = "3.88.49.183";
+        private static readonly string userid = "roots";
+        private static readonly string password = "password";
         private static readonly string database = "mediatek86";
         private static readonly string connectionString = "server=" + server + ";user id=" + userid + ";password=" + password + ";database=" + database + ";SslMode=none";
         
@@ -262,7 +262,7 @@ namespace Mediatek86.modele
             List<Suivi> lesSuivis = getAllSuivis();
             List<Commande> lesCommandes = new List<Commande>();
             string req = "Select C.id, C.dateCommande, C.montant, CD.nbExemplaire, CD.idLivreDvd, CD.idsuivi ";
-            req += " from CommandeDocument CD join Commande C on CD.id = c.id";
+            req += " from commandedocument CD join commande C on CD.id = C.id";
             req += " order by C.Id;";
             BddMySql curs = BddMySql.GetInstance(connectionString);
             curs.ReqSelect(req, null);
@@ -446,7 +446,7 @@ namespace Mediatek86.modele
         {
             try
             {
-                string req = "update CommandeDocument set idsuivi = @idSuivi ";
+                string req = "update commandedocument set idsuivi = @idSuivi ";
                 req += "where id = @id;";
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>
@@ -473,7 +473,7 @@ namespace Mediatek86.modele
         {
             try
             {
-                string req = "delete from CommandeDocument where id = @id; ";
+                string req = "delete from commandedocument where id = @id; ";
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>
                 {
@@ -485,7 +485,7 @@ namespace Mediatek86.modele
             
 
 
-                string req2 = "delete from Commande where id = @id; ";
+                string req2 = "delete from commande where id = @id; ";
 
                 Dictionary<string, object> parameters2 = new Dictionary<string, object>
                 {
@@ -546,7 +546,7 @@ namespace Mediatek86.modele
         {
             try
             {
-                string req = "delete from Abonnement where id = @id; ";
+                string req = "delete from abonnement where id = @id; ";
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>
                 {
@@ -558,7 +558,7 @@ namespace Mediatek86.modele
                
 
 
-                string req2 = "delete from Commande where id = @id; ";
+                string req2 = "delete from commande where id = @id; ";
 
                 Dictionary<string, object> parameters2 = new Dictionary<string, object>
                 {
@@ -584,7 +584,7 @@ namespace Mediatek86.modele
         {
             try
             {
-                string req = "update Abonnement set dateFinAbonnement = @dateFinAbonnement ";
+                string req = "update abonnement set dateFinAbonnement = @dateFinAbonnement ";
                 req += "where id = @id;";
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>
@@ -611,7 +611,7 @@ namespace Mediatek86.modele
             
             List<Abonnement> lesAbonnements = new List<Abonnement>();
             string req = "Select C.id, C.dateCommande, C.montant, A.dateFinAbonnement, A.idRevue ";
-            req += " from Abonnement A join Commande C on A.id = c.id";
+            req += " from abonnement A join commande C on A.id = C.id";
             req += " order by C.Id;";
             BddMySql curs = BddMySql.GetInstance(connectionString);
             curs.ReqSelect(req, null);

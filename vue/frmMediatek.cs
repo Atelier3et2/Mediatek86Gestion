@@ -848,7 +848,7 @@ namespace Mediatek86.vue
             catch
             {
                 pcbDvdImage.Image = null;
-                Log.Information("pcbDvdImage ne contient pas d'image);
+                Log.Information("pcbDvdImage ne contient pas d'image");
             }
         }
 
