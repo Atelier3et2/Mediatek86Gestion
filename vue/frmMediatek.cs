@@ -1332,7 +1332,7 @@ namespace Mediatek86.vue
                         txtNumLivreCmd.Text = livre.Id;
                         RemplirLivresListe(livres, dgvSearchLivreCmd);
                         remplirLstCmdLivres(controle.GetAllCommandes(), livre.Id);
-
+                        zoneNewCmdEnable(false);
                     }
                     else
                     {
@@ -1381,7 +1381,10 @@ namespace Mediatek86.vue
         /// <param name="saisie"></param>
         private void zoneNewCmdEnable(bool saisie)
         {
-
+            if(txtMontantCmdLivre.Enabled == true)
+            {
+                viderNouvelleCommande();
+            }
             TxtNbExemplaireCmdLivre.Enabled = saisie;
             txtMontantCmdLivre.Enabled = saisie;
             cbxSuiviCmdLivre.Enabled = !saisie;
@@ -1398,6 +1401,7 @@ namespace Mediatek86.vue
             }
             if (txtNumLivreCmd.Text == "")
             {
+                
                 btnNewCmd.Enabled = false;
             }
 
@@ -1485,13 +1489,14 @@ namespace Mediatek86.vue
                 try
                 {
                     remplirInfoCommande();
-                    zoneNewCmdEnable(false);
+                    
                 }
                 catch
                 {
                     MessageBox.Show("Le remplissage des informations à échoué");
                 }
             }
+            zoneNewCmdEnable(false);
 
 
         }
@@ -1655,6 +1660,7 @@ namespace Mediatek86.vue
                         txtNumDvdCmd.Text = dvd.Id;
                         txtNumDvdCmd.Enabled = false;
                         remplirLstCmdDvd(lesCommandes, dvd.Id);
+                       zoneNewCmdDvdEnable(false);
 
                     }
                     else
@@ -1772,7 +1778,10 @@ namespace Mediatek86.vue
         private void zoneNewCmdDvdEnable(bool saisie)
         {
 
-
+            if(txtMontantCmdLivre.Enabled == true)
+            {
+                viderNouvelleCommandeDvd();
+            }
             txtNbExemplaireDvd.Enabled = saisie;
             txtMontantDvd.Enabled = saisie;
             cbxSuiviDvd.Enabled = !saisie;
@@ -1970,6 +1979,7 @@ namespace Mediatek86.vue
                         revues.Add(revue);
                         RemplirRevuesListe(revues, dgvRechercheRevue);
                         remplirLstCmdRevue(controle.getAllAbonnements(), revue.Id);
+                        zoneNewCmdRevueEnable(false);
                     }
                     else
                     {
@@ -2077,6 +2087,10 @@ namespace Mediatek86.vue
         /// <param name="saisie"></param>
         private void zoneNewCmdRevueEnable(bool saisie)
         {
+            if(txtCmdMontantRevue.Enabled = true)
+            {
+                viderNouvelleAbonnement();
+            }
             txtCmdMontantRevue.Enabled = saisie;
             txtNumCmdRevue.Enabled = false;
             dateDebutCmdRevue.Enabled = false;
