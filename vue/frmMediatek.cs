@@ -1381,7 +1381,7 @@ namespace Mediatek86.vue
         /// <param name="saisie"></param>
         private void zoneNewCmdEnable(bool saisie)
         {
-            if(txtMontantCmdLivre.Enabled == true)
+            if(txtMontantCmdLivre.Enabled)
             {
                 viderNouvelleCommande();
             }
@@ -1512,7 +1512,7 @@ namespace Mediatek86.vue
             foreach (Suivi suivi in lesSuivis)
             {
                 lstSuivisModif.Add(suivi);
-
+                
             }
             Suivi unSuivi = lstSuivisModif.Find(x => x.Id.Equals(commande.Suivi.Id));
 
@@ -1778,7 +1778,7 @@ namespace Mediatek86.vue
         private void zoneNewCmdDvdEnable(bool saisie)
         {
 
-            if(txtMontantCmdLivre.Enabled == true)
+            if(txtMontantCmdLivre.Enabled)
             {
                 viderNouvelleCommandeDvd();
             }
@@ -2015,9 +2015,9 @@ namespace Mediatek86.vue
                     lesSuivis = controle.getAllSuivis();
                     List<Commande> CommandesOfId = lesCommandes.FindAll(x => x.IdLivreDvd.Equals(livre.Id));
                     bdgCommandes.DataSource = CommandesOfId;
-                    dgvCommandeLivres.DataSource = bdgCommandes;
-                    dgvCommandeLivres.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-                    if (dgvCommandeLivres.CurrentCell != null)
+                    dgvCmdRevues.DataSource = bdgCommandes;
+                    dgvCmdRevues.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                    if (dgvCmdRevues.CurrentCell != null)
                     {
                         remplirInfoCommande();
                     }
@@ -2087,7 +2087,7 @@ namespace Mediatek86.vue
         /// <param name="saisie"></param>
         private void zoneNewCmdRevueEnable(bool saisie)
         {
-            if(txtCmdMontantRevue.Enabled = true)
+            if(txtCmdMontantRevue.Enabled)
             {
                 viderNouvelleAbonnement();
             }
@@ -2104,6 +2104,10 @@ namespace Mediatek86.vue
             {
                 btnRenouvellerCmdRevue.Enabled = false;
                 dateFinCmdRevue.Enabled = saisie;
+            }
+            if(txtNumCmdRevue.Text == "")
+            {
+                btnNewCmdRevue.Enabled = false;
             }
 
 
@@ -2137,7 +2141,7 @@ namespace Mediatek86.vue
             {
                 viderNouvelleAbonnement();
                 zoneNewCmdRevueEnable(false);
-                remplirZoneCmdRevue();
+                
             }
         }
         /// <summary>
@@ -2260,6 +2264,7 @@ namespace Mediatek86.vue
             zoneNewCmdRevueEnable(false);
             dateDebCmdRevue.Enabled = false;
             txtNumCmdRevue.Enabled = false;
+          
         }
         /// <summary>
         /// Evenement sur click de colonne - tri .

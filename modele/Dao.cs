@@ -34,6 +34,7 @@ namespace Mediatek86.modele
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("@login", login);
             parameters.Add("@pwd", pwd);
+
             BddMySql curs = BddMySql.GetInstance(connectionString);
             curs.ReqSelect(req, parameters);
             int idservice = 0;

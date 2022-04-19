@@ -17,7 +17,6 @@ namespace Mediatek86.controleur
         private List<Commande> lesCommandes;
         private readonly List<Suivi> lesSuivis;
         private readonly List<Abonnement> lesAbonnements;
-        private FrmAuthentification frmAuthentification;
         private FrmMediatek frameMediatek;
         private int instance = 0;
 
@@ -61,9 +60,6 @@ namespace Mediatek86.controleur
                         frameMediatek.ShowDialog();
 
                     }
-                    
-
-
                 }
                 else
                 {
